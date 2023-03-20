@@ -37,5 +37,8 @@
       "last 1 safari version"
     ]
   },
-    "homepage": "https://github.com/FilDsgn/mesto-react"
+  "homepage": "https://github.com/FilDsgn/mesto-react",
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  }
 }
