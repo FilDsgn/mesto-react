@@ -21,17 +21,10 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
     api
       .getCardList()
       .then((cardList) => {
-        setCards(
-          cardList.map((data) => ({
-            name: data.name,
-            link: data.link,
-            id: data._id,
-            likes: data.likes,
-          }))
-        );
+        setCards(cardList);
       })
       .catch((err) => console.log(err));
-  });
+  }, []);
 
   return (
     <main className="content">
