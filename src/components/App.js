@@ -20,12 +20,19 @@ function App() {
 
   React.useEffect(() => {
     api
+      .getCardList()
+      .then((cardList) => {
+        setCards(cardList);
+      })
+      .catch((err) => console.log(err));
+
+    api
       .getUserInfo()
       .then((userInfo) => {
         setCurrentUser(userInfo);
       })
       .catch((err) => console.log(err));
-  });
+  }, []);
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -37,10 +44,31 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((like) => like._id === currentUser._id);
 
-    api.changeLikeCardStatus(card.id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card.id ? newCard : c)));
-    });
-    console.log(card.id);
+    api
+      .changeLikeCardStatus(card.id, isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((c) => (c._id === card.id ? newCard : c))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleCardDelete(card) {
+    const isOwn = card.owner._id === currentUser._id;
+
+    if (isOwn) {
+      api
+        .deleteCard(card.id)
+        .then(() => {
+          setCards((state) => state.filter((c) => c._id !== card.id));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 
   return (
@@ -49,11 +77,13 @@ function App() {
         <div className="page">
           <Header />
           <Main
+            cards={cards}
             onEditProfile={setIsEditProfilePopupOpen}
             onAddPlace={setIsAddPlacePopupOpen}
             onEditAvatar={setIsEditAvatarPopupOpen}
             onCardClick={setSelectedCard}
             onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
           />
           <Footer />
 

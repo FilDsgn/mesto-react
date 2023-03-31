@@ -19,6 +19,10 @@ function Card(card) {
     card.onCardLike(card);
   }
 
+  function handleCardDelete() {
+    card.onCardDelete(card);
+  }
+
   return (
     <article className="element">
       {isOwn && (
@@ -26,7 +30,7 @@ function Card(card) {
           type="button"
           aria-label="Удалить"
           className="element__delete"
-          // onClick={handleDeleteClick}
+          onClick={handleCardDelete}
         ></button>
       )}
       <img

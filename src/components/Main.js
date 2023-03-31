@@ -1,27 +1,17 @@
-import { useEffect, useState, useContext } from "react";
-import api from "../utils/api.js";
+import { useContext } from "react";
 import Card from "./Card.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 function Main({
+  cards,
   onEditProfile,
   onAddPlace,
   onEditAvatar,
   onCardClick,
   onCardLike,
+  onCardDelete,
 }) {
-  const [cards, setCards] = useState([]);
-
   const user = useContext(CurrentUserContext);
-
-  useEffect(() => {
-    api
-      .getCardList()
-      .then((cardList) => {
-        setCards(cardList);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <main className="content">
@@ -78,6 +68,7 @@ function Main({
               owner={card.owner}
               onCardClick={onCardClick}
               onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
             />
           ))}
         </div>
