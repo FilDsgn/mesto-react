@@ -1,15 +1,34 @@
+import { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
+
 function Card(card) {
+  const user = useContext(CurrentUserContext);
+
+  const isOwn = card.owner._id === user._id;
+  const isLiked = card.likes.some((like) => like._id === user._id);
+
+  const cardLikeButtonClassName = `element__like ${
+    isLiked && "element__like_active"
+  }`;
+
   function handleCardClick() {
     card.onCardClick(card);
   }
 
+  function handleLikeClick() {
+    card.onCardLike(card);
+  }
+
   return (
     <article className="element">
-      <button
-        type="button"
-        aria-label="Удалить"
-        className="element__delete"
-      ></button>
+      {isOwn && (
+        <button
+          type="button"
+          aria-label="Удалить"
+          className="element__delete"
+          // onClick={handleDeleteClick}
+        ></button>
+      )}
       <img
         src={card.link}
         alt={card.name}
@@ -22,7 +41,8 @@ function Card(card) {
           <button
             type="button"
             aria-label="Поставить лайк"
-            className="element__like"
+            className={cardLikeButtonClassName}
+            onClick={handleLikeClick}
           ></button>
           <p
             className={`element__like-counter ${
