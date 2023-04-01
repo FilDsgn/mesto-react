@@ -4,6 +4,8 @@ import Main from "./Main.js";
 import Footer from "./Footer.js";
 import PopupWithForm from "./PopupWithForm.js";
 import ImagePopup from "./ImagePopup.js";
+import EditProfilePopup from "./EditProfilePopup.js";
+import EditAvatarPopup from "./EditAvatarPopup.js";
 import api from "../utils/api.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
@@ -71,6 +73,16 @@ function App() {
     }
   }
 
+  function handleUpdateUser(updateUserInfo) {
+    api
+      .setUserInfo(updateUserInfo)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -87,52 +99,16 @@ function App() {
           />
           <Footer />
 
-          <PopupWithForm
-            title="Редактировать профиль"
-            name="content_profile"
+          <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
-          >
-            <input
-              name="name"
-              type="text"
-              placeholder="Ваше имя"
-              minLength="2"
-              maxLength="40"
-              required
-              id="username"
-              className="popup__input popup__input_place_name"
-            />
-            <span className="username-error popup__input-error"></span>
-            <input
-              name="about"
-              type="text"
-              placeholder="Дополнительная информация"
-              minLength="2"
-              maxLength="200"
-              required
-              id="about"
-              className="popup__input popup__input_place_about"
-            />
-            <span className="about-error popup__input-error"></span>
-          </PopupWithForm>
+            onUpdateUser={handleUpdateUser}
+          />
 
-          <PopupWithForm
-            title="Обновить аватар"
-            name="update_avatar"
+          <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-          >
-            <input
-              name="avatar"
-              type="url"
-              placeholder="Ссылка на картинку"
-              id="image-link"
-              className="popup__input popup__input_place_image"
-              required
-            />
-            <span className="image-link-error popup__input-error"></span>
-          </PopupWithForm>
+          />
 
           <PopupWithForm
             title="Новое место"

@@ -4,6 +4,7 @@ function PopupWithForm({
   buttonText = "Сохранить",
   isOpen,
   onClose,
+  onSubmit,
   children,
 }) {
   return (
@@ -11,6 +12,7 @@ function PopupWithForm({
       <div className="popup__container">
         <form
           action="#"
+          onSubmit={onSubmit}
           name={name}
           className="popup__form popup__form_card"
           noValidate
