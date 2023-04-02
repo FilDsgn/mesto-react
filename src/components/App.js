@@ -2,10 +2,10 @@ import React from "react";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
-import PopupWithForm from "./PopupWithForm.js";
 import ImagePopup from "./ImagePopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
+import AddPlacePopup from "./AddPlacePopup.js";
 import api from "../utils/api.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
@@ -83,6 +83,23 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  function handleUpdateAvatar(updateUserAvatar) {
+    api
+      .setUserAvatar(updateUserAvatar)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleAddPlaceSubmit(newCard) {
+    api.createCard(newCard).then((card) => {
+      setCards([card, ...cards]);
+      closeAllPopups();
+    });
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -108,35 +125,14 @@ function App() {
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
           />
 
-          <PopupWithForm
-            title="Новое место"
-            name="content_card"
+          <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
-          >
-            <input
-              name="name"
-              type="text"
-              placeholder="Название"
-              minLength="2"
-              maxLength="30"
-              required
-              id="locate-name"
-              className="popup__input popup__input_place_locate"
-            />
-            <span className="locate-name-error popup__input-error"></span>
-            <input
-              name="link"
-              type="url"
-              placeholder="Ссылка на картинку"
-              id="avatar-link"
-              className="popup__input popup__input_place_image"
-              required
-            />
-            <span class="avatar-link-error popup__input-error"></span>
-          </PopupWithForm>
+            onAddPlace={handleAddPlaceSubmit}
+          />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
