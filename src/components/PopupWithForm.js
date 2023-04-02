@@ -2,9 +2,11 @@ function PopupWithForm({
   title,
   name,
   buttonText = "Сохранить",
+  buttonTextOnLoading = "Сохранение",
   isOpen,
   onClose,
   onSubmit,
+  onLoading,
   children,
 }) {
   return (
@@ -24,7 +26,7 @@ function PopupWithForm({
             aria-label="Сохранить"
             className="popup__button"
           >
-            {buttonText}
+            {onLoading ? buttonTextOnLoading : buttonText}
           </button>
         </form>
         <button
