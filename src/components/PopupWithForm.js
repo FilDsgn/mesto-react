@@ -5,12 +5,18 @@ function PopupWithForm({
   buttonTextOnLoading = "Сохранение",
   isOpen,
   onClose,
+  onOverlayClick,
+  onTransitionEnd,
   onSubmit,
   onLoading,
   children,
 }) {
   return (
-    <div className={`popup popup_${name} ${isOpen && "popup_opened"}`}>
+    <div
+      className={`popup popup_${name} ${isOpen && "popup_opened"}`}
+      onClick={onOverlayClick}
+      onTransitionEnd={onTransitionEnd}
+    >
       <div className="popup__container">
         <form
           action="#"

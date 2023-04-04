@@ -24,6 +24,13 @@ function App() {
 
   const [cards, setCards] = React.useState([]);
 
+  const isPopupOpen =
+    isEditProfilePopupOpen ||
+    isAddPlacePopupOpen ||
+    isEditAvatarPopupOpen ||
+    isConfirmPopupOpen ||
+    isImagePopupOpen;
+
   React.useEffect(() => {
     api
       .getCardList()
@@ -45,9 +52,22 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsImagePopupOpen(false);
-    setSelectedCard({});
     setIsConfirmPopupOpen(false);
   }
+
+  function closeOnOverlayClick(e) {
+    if (e.target === e.currentTarget) {
+      closeAllPopups();
+    }
+  }
+
+  function handleTransitionEnd() {
+    if (!isPopupOpen) {
+      setSelectedCard({});
+    }
+  }
+
+  console.log(selectedCard);
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((like) => like._id === currentUser._id);
@@ -150,6 +170,7 @@ function App() {
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
+            onOverlayClick={closeOnOverlayClick}
             onUpdateUser={handleUpdateUser}
             onLoading={isLoading}
           />
@@ -157,6 +178,7 @@ function App() {
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
+            onOverlayClick={closeOnOverlayClick}
             onUpdateAvatar={handleUpdateAvatar}
             onLoading={isLoading}
           />
@@ -164,6 +186,7 @@ function App() {
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
+            onOverlayClick={closeOnOverlayClick}
             onAddPlace={handleAddPlaceSubmit}
             onLoading={isLoading}
           />
@@ -172,26 +195,19 @@ function App() {
             card={selectedCard}
             isOpen={isImagePopupOpen}
             onClose={closeAllPopups}
+            onOverlayClick={closeOnOverlayClick}
+            onTransitionEnd={handleTransitionEnd}
           />
 
           <DeleteCardPopup
             card={selectedCard}
             isOpen={isConfirmPopupOpen}
             onClose={closeAllPopups}
+            onOverlayClick={closeOnOverlayClick}
+            onTransitionEnd={handleTransitionEnd}
             onCardDelete={handleCardDelete}
             onLoading={isLoading}
           />
-
-          {/* Pop-up confirm
-      <div className="popup popup_confirm">
-        <div className="popup__container">
-          <form action="#" name="profile-form" className="popup__form popup__form_card" noValidate>
-            <h2 className="popup__title">Вы уверены?</h2>
-            <button type="submit" aria-label="Сохранить" className="popup__button">Да</button>
-          </form>
-          <button type="button" className="popup__close-button"></button>
-        </div>
-      </div> */}
         </div>
       </div>
     </CurrentUserContext.Provider>

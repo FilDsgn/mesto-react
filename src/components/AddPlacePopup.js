@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
+function AddPlacePopup({
+  isOpen,
+  onClose,
+  onOverlayClick,
+  onAddPlace,
+  onLoading,
+}) {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
 
@@ -29,6 +35,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
       name="content_card"
       isOpen={isOpen}
       onClose={onClose}
+      onOverlayClick={onOverlayClick}
       onSubmit={handleSubmit}
       onLoading={onLoading}
     >

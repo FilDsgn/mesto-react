@@ -1,6 +1,16 @@
-function ImagePopup({ card, isOpen, onClose }) {
+function ImagePopup({
+  card,
+  isOpen,
+  onClose,
+  onOverlayClick,
+  onTransitionEnd,
+}) {
   return (
-    <div className={`popup popup_content_image ${isOpen && "popup_opened"}`}>
+    <div
+      className={`popup popup_content_image ${isOpen && "popup_opened"}`}
+      onClick={onOverlayClick}
+      onTransitionEnd={onTransitionEnd}
+    >
       <div className="popup__image-container">
         <figure className="popup__figure">
           <img src={card.link} alt={card.name} className="popup__image" />
