@@ -19,7 +19,7 @@ function Card(card) {
     card.onCardLike(card);
   }
 
-  function handleCardDelete() {
+  function handleCardDeleteClick() {
     card.onCardDelete(card);
   }
 
@@ -30,7 +30,7 @@ function Card(card) {
           type="button"
           aria-label="Удалить"
           className="element__delete"
-          onClick={handleCardDelete}
+          onClick={handleCardDeleteClick}
         ></button>
       )}
       <img

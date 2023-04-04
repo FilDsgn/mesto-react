@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
+import DeleteCardPopup from "./DeleteCardPopup.js";
 import ImagePopup from "./ImagePopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
@@ -15,6 +16,8 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
@@ -41,7 +44,9 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    setIsImagePopupOpen(false);
     setSelectedCard({});
+    setIsConfirmPopupOpen(false);
   }
 
   function handleCardLike(card) {
@@ -61,17 +66,30 @@ function App() {
 
   function handleCardDelete(card) {
     const isOwn = card.owner._id === currentUser._id;
+    setIsLoading(true);
 
     if (isOwn) {
       api
         .deleteCard(card.id)
         .then(() => {
           setCards((state) => state.filter((c) => c._id !== card.id));
+          closeAllPopups();
         })
         .catch((err) => {
           console.log(err);
-        });
+        })
+        .finally(() => setIsLoading(false));
     }
+  }
+
+  function handleCardDeleteClick(card) {
+    setIsConfirmPopupOpen(true);
+    setSelectedCard(card);
+  }
+
+  function handleCardImageClick(card) {
+    setIsImagePopupOpen(true);
+    setSelectedCard(card);
   }
 
   function handleUpdateUser(updateUserInfo) {
@@ -123,9 +141,9 @@ function App() {
             onEditProfile={setIsEditProfilePopupOpen}
             onAddPlace={setIsAddPlacePopupOpen}
             onEditAvatar={setIsEditAvatarPopupOpen}
-            onCardClick={setSelectedCard}
+            onCardClick={handleCardImageClick}
             onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+            onCardDelete={handleCardDeleteClick}
           />
           <Footer />
 
@@ -150,7 +168,19 @@ function App() {
             onLoading={isLoading}
           />
 
-          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          <ImagePopup
+            card={selectedCard}
+            isOpen={isImagePopupOpen}
+            onClose={closeAllPopups}
+          />
+
+          <DeleteCardPopup
+            card={selectedCard}
+            isOpen={isConfirmPopupOpen}
+            onClose={closeAllPopups}
+            onCardDelete={handleCardDelete}
+            onLoading={isLoading}
+          />
 
           {/* Pop-up confirm
       <div className="popup popup_confirm">
