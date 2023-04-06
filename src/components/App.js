@@ -61,6 +61,19 @@ function App() {
     }
   }
 
+  const closePopupsOnEsc = React.useCallback((e) => {
+    if (e.key === "Escape") {
+      closeAllPopups();
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (isPopupOpen) {
+      document.addEventListener("keydown", closePopupsOnEsc);
+      return () => document.removeEventListener("keydown", closePopupsOnEsc);
+    }
+  }, [isPopupOpen, closePopupsOnEsc]);
+
   function handleTransitionEnd() {
     if (!isPopupOpen) {
       setSelectedCard({});
