@@ -43,7 +43,7 @@ function AddPlacePopup({
     >
       <input
         name="name"
-        value={values["name"]}
+        value={values["name"] ?? ""}
         type="text"
         onChange={handleChange}
         placeholder="Название"
@@ -56,7 +56,7 @@ function AddPlacePopup({
       <span className="popup__input-error">{errors.name}</span>
       <input
         name="link"
-        value={values["link"]}
+        value={values["link"] ?? ""}
         type="url"
         onChange={handleChange}
         placeholder="Ссылка на картинку"
@@ -64,7 +64,7 @@ function AddPlacePopup({
         id="avatar-link"
         className="popup__input popup__input_place_image"
       />
-      <span class="popup__input-error">{errors.link}</span>
+      <span className="popup__input-error">{errors.link}</span>
     </PopupWithForm>
   );
 }

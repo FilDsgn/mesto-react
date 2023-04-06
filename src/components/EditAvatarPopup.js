@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 
 import PopupWithForm from "./PopupWithForm.js";
 import useFormValidation from "../utils/useFormValidation.js";
@@ -10,18 +10,17 @@ function EditAvatarPopup({
   onUpdateAvatar,
   onLoading,
 }) {
-  const avatarRef = useRef();
   const { values, errors, isValid, handleChange, setValue, reset, formRef } =
     useFormValidation();
 
   useEffect(() => {
-    avatarRef.current.value = "";
+    setValue("avatar", "");
   }, [isOpen, setValue]);
 
   function handleSubmit(e) {
     e.preventDefault();
     if (isValid) {
-      onUpdateAvatar({ avatar: avatarRef.current.value });
+      onUpdateAvatar({ avatar: values.avatar });
     }
   }
 
@@ -44,8 +43,7 @@ function EditAvatarPopup({
     >
       <input
         name="avatar"
-        value={values["avatar"]}
-        ref={avatarRef}
+        value={values["avatar"] ?? ""}
         type="url"
         onChange={handleChange}
         placeholder="Ссылка на картинку"
