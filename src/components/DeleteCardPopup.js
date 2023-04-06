@@ -26,6 +26,7 @@ function DeleteCardPopup({
       onTransitionEnd={onTransitionEnd}
       onSubmit={handleSubmit}
       onLoading={onLoading}
+      isValid="true"
     />
   );
 }

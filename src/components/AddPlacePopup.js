@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import useFormValidation from "../utils/useFormValidation.js";
 import PopupWithForm from "./PopupWithForm.js";
 
 function AddPlacePopup({
@@ -8,42 +9,43 @@ function AddPlacePopup({
   onAddPlace,
   onLoading,
 }) {
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
+  const { values, errors, isValid, handleChange, setValue, reset, formRef } =
+    useFormValidation();
 
   useEffect(() => {
-    setName("");
-    setLink("");
-  }, [isOpen]);
+    setValue("name", "");
+    setValue("link", "");
+  }, [isOpen, setValue]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace({ name: name, link: link });
+    if (isValid) {
+      onAddPlace({ name: values.name, link: values.link });
+    }
   }
 
-  function handleChangeName(e) {
-    setName(e.target.value);
-  }
-
-  function handleChangeLink(e) {
-    setLink(e.target.value);
-  }
+  const onClosePopup = () => {
+    onClose();
+    reset();
+  };
 
   return (
     <PopupWithForm
       title="Новое место"
       name="content_card"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onClosePopup}
       onOverlayClick={onOverlayClick}
       onSubmit={handleSubmit}
       onLoading={onLoading}
+      isValid={isValid}
+      ref={formRef}
     >
       <input
         name="name"
+        value={values["name"]}
         type="text"
-        value={name}
-        onChange={handleChangeName}
+        onChange={handleChange}
         placeholder="Название"
         minLength="2"
         maxLength="30"
@@ -51,18 +53,18 @@ function AddPlacePopup({
         id="locate-name"
         className="popup__input popup__input_place_locate"
       />
-      <span className="locate-name-error popup__input-error"></span>
+      <span className="popup__input-error">{errors.name}</span>
       <input
         name="link"
+        value={values["link"]}
         type="url"
-        value={link}
-        onChange={handleChangeLink}
+        onChange={handleChange}
         placeholder="Ссылка на картинку"
+        required
         id="avatar-link"
         className="popup__input popup__input_place_image"
-        required
       />
-      <span class="avatar-link-error popup__input-error"></span>
+      <span class="popup__input-error">{errors.link}</span>
     </PopupWithForm>
   );
 }
